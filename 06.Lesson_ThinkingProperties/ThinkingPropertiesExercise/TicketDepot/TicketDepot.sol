@@ -8,13 +8,13 @@ contract TicketDepot {
 		uint64 ticketPrice;  
 		uint16 ticketsRemaining;  
 		mapping(uint16 => address) attendees;  
-	} 
+	}
 
 	struct Offering{  
 		address buyer;
 		uint64 price;
 		uint256 deadline;
-	} 
+	}
 
 	uint16 numEvents;
 	address public owner;  
@@ -23,14 +23,14 @@ contract TicketDepot {
 	mapping(bytes32 => Offering) offerings;
 
     // creates a "seller"
-	function ticketDepot(uint64 _transactionFee) public {  
+	function ticketDepot(uint64 _transactionFee) public {
 		transactionFee = _transactionFee;  
 		owner = tx.origin;
         numEvents = 0;
-	} 
+	}
 
     // creates an event with the specified number of tickets and price for sale
-	function createEvent(uint64 _ticketPrice, uint16 _ticketsAvailable) public returns (uint16 eventID){         
+	function createEvent(uint64 _ticketPrice, uint16 _ticketsAvailable) public returns (uint16 eventID){
 		numEvents++;  
 		eventsMap[numEvents].owner = tx.origin;  
 		eventsMap[numEvents].ticketPrice = _ticketPrice;  
@@ -66,8 +66,8 @@ contract TicketDepot {
 		if (msg.sender != eventsMap[_eventID].attendees[_ticketID] ||
              msg.value < transactionFee) revert();  
         
-		bytes32 offerID = keccak256(abi.encode(_eventID,_ticketID));  
-		if (offerings[offerID].deadline != 0) revert();  
+		bytes32 offerID = keccak256(abi.encode(_eventID,_ticketID));
+		if (offerings[offerID].deadline != 0) revert();
         // paying the depot the transaction fee - the seller pays the fee instead of the buyer
         payable(owner).transfer(transactionFee);
         offerings[offerID].buyer = _buyer;

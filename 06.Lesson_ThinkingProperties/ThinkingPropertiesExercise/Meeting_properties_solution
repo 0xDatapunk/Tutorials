@@ -1,0 +1,7 @@
+1. state transition needs to be:
+    UNINITIALIZED to PENDING by an organizer => start>=now, end>start
+    PENDING to STARTED by anyone => start<=now 
+    PENDING to CANCELLED by organizer => end>now
+    STARTED to ENDED by anyone => end<=now
+
+2. joinMeeting called => STARTED, numOfParticipents increases

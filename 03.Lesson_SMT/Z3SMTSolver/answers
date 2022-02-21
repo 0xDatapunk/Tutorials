@@ -1,0 +1,23 @@
+
+(declare-const x Int)
+(declare-const y Int)
+(declare-const z Int)
+(declare-fun f (Int Bool) Int)
+(assert (= (+ x x) 10))
+(assert (= (+ (* x y) y) 12))
+(assert (= (- (* x y) (* x z)) x))
+(check-sat)
+(get-model)
+
+
+(declare-const p Bool)
+(declare-const q Bool)
+(define-fun conjecture () Bool
+    (= 
+        (= (and p q) p) 
+        (=> p q)
+    ))
+(assert (not conjecture))
+(check-sat)
+(get-model)
+

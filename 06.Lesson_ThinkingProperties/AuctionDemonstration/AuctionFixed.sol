@@ -98,7 +98,7 @@ contract AuctionImpl is TokenInterface {
 		require(auctions[id].bid_expiry != 0
 				&& (auctions[id].bid_expiry < now || 
 					auctions[id].end_time < now));
-		// check that supply is not close to reach a limit, there should be enough to close another similar auction
+		// @note check that supply is not close to reach a limit, there should be enough to close another similar auction
 		require(auctions[id].prize.safeAdd(auctions[id].prize) + getTotalSupply() >= getTotalSupply());
 
 		mint(auctions[id].winner, auctions[id].prize);
@@ -108,6 +108,6 @@ contract AuctionImpl is TokenInterface {
 }
 
 contract System is Token, AuctionImpl {
-
+	@note how does the address look like? 
 }
 

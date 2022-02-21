@@ -43,11 +43,13 @@ rule correctPointsIncreaseToContenders(address first, address second, address th
 // Checks that a black listed voter cannaot get unlisted
 rule onceBlackListedNotOut(method f, address voter){
     env e; calldataarg args;
+    // voter = e.msg.sender;
     uint256 age; bool registeredBefore; bool voted; uint256 vote_attempts; bool black_listed_Before;
-    age, registeredBefore, voted, vote_attempts, black_listed_Before = getFullVoterDetails(e, voter);
+    age, registeredBefore, voted, vote_attempts, black_listed_Before = getFullVoterDetails(e, e.msg.sender);
+    // require voter == e.msg.sender;
     f(e, args);
     bool registeredAfter; bool black_listed_After;
-    age, registeredAfter, voted, vote_attempts, black_listed_After = getFullVoterDetails(e, voter);
+    age, registeredAfter, voted, vote_attempts, black_listed_After = getFullVoterDetails(e, e.msg.sender);
     
     assert (registeredBefore && black_listed_Before) => black_listed_After, "the specified user got out of the black list";
 }

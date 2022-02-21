@@ -28,3 +28,4 @@ certora_*
 
 # mac
 .DS_Store
+resource_errors.json

@@ -1,0 +1,6 @@
+1. rewards decrease => collectFees called
+2. this.balance >= sum(balances[user]) * (1+totalFeesEarnedPerShare)
+3. this.balance >= balances[user] * (1+totalFeesEarnedPerShare)
+4. totalFeesEarnedPerShare never decreases, otherwise DOS 
+5. accounts[msg.sender].Rewards decreases => accounts[msg.sender].Rewards==0 && collectFees called
+6. accounts[msg.sender].feesCollectedPerShare <= totalFeesEarnedPerShare (same as 4?)
