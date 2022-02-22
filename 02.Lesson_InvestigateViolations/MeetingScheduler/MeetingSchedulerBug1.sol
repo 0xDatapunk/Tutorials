@@ -80,7 +80,7 @@ contract MeetingScheduler is IMeetingScheduler {
             scheduledMeeting.status == MeetingStatus.PENDING,
             "can't start a meeting if it isn't pending"
         );
-        require(
+        require( // @note meeting can't start in the past"
             block.timestamp >= scheduledMeeting.startTime,
             "meeting can't start in the past"
         );

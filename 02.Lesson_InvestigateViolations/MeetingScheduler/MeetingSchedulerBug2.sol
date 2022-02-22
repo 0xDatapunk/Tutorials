@@ -96,7 +96,7 @@ contract MeetingScheduler is IMeetingScheduler {
         require(msg.sender == scheduledMeeting.organizer,
                 "only the organizer of a meeting can cancel it"
         );
-        require(
+        require( // @note states were wrong
             scheduledMeeting.status == MeetingStatus.PENDING,
             "meetings can be cancelled only if it's currently pending"
         );
