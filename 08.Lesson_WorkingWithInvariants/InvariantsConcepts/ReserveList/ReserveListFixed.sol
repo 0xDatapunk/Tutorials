@@ -29,7 +29,7 @@ contract ReserveList is IReserveList {
 
     function addReserve(address token, address stableToken, address varToken, uint256 fee) external override {
         require(address(token) != address(0), "invalid token");
-        bool alreadyAdded = reserves[token].id != 0 || underlyingList[0] == token;
+        bool alreadyAdded = reserves[token].id != 0 || underlyingList[0] == token; // @note 2 what the 2nd for?
         require(!alreadyAdded, "reserve is already in the database");
         reserves[token] = ReserveData({
             id: 0, 

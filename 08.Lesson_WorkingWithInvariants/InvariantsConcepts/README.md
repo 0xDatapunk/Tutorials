@@ -75,6 +75,7 @@ invariant exampleInvariant(uint arg1, address arg2, ...)
 
 rule exampleRule(bytes32 arg1, uint arg2, address arg3, ...){
     requireInvariant exampleInvariant(arg2, arg3);
+    require exp
     
     ...
 
@@ -102,7 +103,11 @@ If the invariant passes verification, it can be assumed quite safely in any othe
 
 > :memo: When breaking the code to multiple invariants and rules we can find flaws in the asserts more easily, make violation investigation less tiresome, and allow ourselves to use pre-conditions in a modular and safe way.
 
-> :warning: Note that the code will still assume the invariant where ever it is told to, even if the invariant itself fails. Always make sure that the invariant passes correctly before assuming it.
+> :warning: Note that the code will still assume the invariant where ever it is told to, even if the invariant itself fails. Always make sure that the invariant passes correctly before assuming it. 
+// @note 2 what does this mean? 
+// what is post-state as in Assert message: invariant violated in post-state Violated for: createFund(uint256),  
+// what is constructor as in pre-condition after the constructor?
+// why env2 is needed?
 
 - [ ] Write the pre-condition in line 9 as an invariant and require this invariant instead of line 9. Run the verification on `ManagerBug3` to see the dissonance of failing the invariant while the rule passes.
 

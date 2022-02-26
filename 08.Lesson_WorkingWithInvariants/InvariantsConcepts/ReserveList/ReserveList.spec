@@ -42,10 +42,30 @@ methods {
 // invariant validToken(address token)
 // 	token!=address(0)
 
+invariant indexLessThanCount(address token)
+    (getReserveCount() > 0 => getIdOfToken(token) < getReserveCount()) &&
+    (getReserveCount() == 0 => getIdOfToken(token) == 0)
+        {
+            preserved removeReserve(address t) {
+                require t == token;
+            }
+        }
+
+
 invariant CorrelatedLists(address token, uint256 id)
 	(id!=0 && token!=0) => (getIdOfToken(token) == id <=> getTokenAtIndex(id) == token)
  	&&
 	(id==0 && getTokenAtIndex(id) == token) => getIdOfToken(token) == id
+	
+		preserved
+            {
+                requireInvariant indexLessThanCount(token);
+            }
+
+        preserved removeReserve(address t) {
+                require t == token;
+            }
+        }
 	 
 // If index i is nonzero and token t is a valid address then t.id equals i iff the i-th reserve is t.
 // If i is zero, i-th token is t implies t.id equals i.

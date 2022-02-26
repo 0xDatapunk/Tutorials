@@ -4,13 +4,45 @@ methods{
 	getStartTimeById(uint256) returns (uint256) envfree
 	getEndTimeById(uint256) returns (uint256) envfree
 	getNumOfParticipents(uint256) returns (uint256) envfree
-	// startMeeting(uint256)
-	// cancelMeeting(uint256)
-	// endMeeting(uint256)
+	startMeeting(uint256)
+	cancelMeeting(uint256)
+	endMeeting(uint256)
+	joinMeeting(uint256) envfree
 }
 
-definition meetingUninitialized(uint256 meetingId)
-	returns bool = getStartTimeById(meetingId) == 0 && getEndTimeById(meetingId) == 0;
+definition meetingUninitialized(uint256 meetingId) 
+	returns bool = getStateById(meetingId) == 0
+		&& getStartTimeById(meetingId) == 0 
+		&& getEndTimeById(meetingId) == 0 
+		&& getNumOfParticipents(meetingId) == 0 
+		&& getOrganizer(meetingId) == 0;
+
+definition meetingPending(uint256 meetingId) 
+	returns bool = getStateById(meetingId) == 1
+		&& getStartTimeById(meetingId) > 0 
+		&& getEndTimeById(meetingId) > getStartTimeById(meetingId) 
+		&& getNumOfParticipents(meetingId) == 0 
+		&& getOrganizer(meetingId) != 0;
+
+definition meetingStarted(uint256 meetingId) 
+	returns bool = getStateById(meetingId) == 2
+		&& getStartTimeById(meetingId) > 0 
+		&& getEndTimeById(meetingId) > getStartTimeById(meetingId)  
+		&& getOrganizer(meetingId) != 0;
+
+definition meetingEnded(uint256 meetingId) 
+	returns bool = getStateById(meetingId) == 3
+		&& getStartTimeById(meetingId) > 0 
+		&& getEndTimeById(meetingId) > getStartTimeById(meetingId)  
+		&& getOrganizer(meetingId) != 0;
+
+definition meetingCancelled(uint256 meetingId) 
+	returns bool = getStateById(meetingId) == 4 
+		&& getStartTimeById(meetingId) > 0 
+		&& getEndTimeById(meetingId) > getStartTimeById(meetingId) 
+		&& getOrganizer(meetingId) != 0;
+
+
 /*  Representing enums
 
     enums are supported by the Certora Verification Language (CVL), 

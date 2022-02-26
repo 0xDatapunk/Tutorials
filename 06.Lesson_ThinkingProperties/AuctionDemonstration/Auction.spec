@@ -37,7 +37,7 @@ rule boundedSupply(method f) {
     assert _supply != supply_ => 
         supply_ <= 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff, 
         "Cannot increase to MAX_UINT256"; 
-    // @note why < not <=?  
+    // @note why  
 }
 
 // A rule for verifying that any scenario preformed by some sender does not decrease the balance of any other account.

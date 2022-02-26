@@ -4,4 +4,4 @@ methods {
 }
 
 invariant neverReachPlayer4() 
-	ballAt() != 4 
+	ballAt() != 4 && ballAt() != 3

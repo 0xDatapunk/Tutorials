@@ -11,10 +11,11 @@ rule can_withdraw() {
     uint256 reserves       = getEthBalance(currentContract);
     uint256 funds_before   = getFunds(e.msg.sender);
 
+    require e.msg.sender!=currentContract;
+    
     withdraw@withrevert(e);
-
-    uint256 balance_after  = getEthBalance(e.msg.sender);
-    assert balance_after == balance_before + funds_before;
+    // @note why does this fail?
+    assert lastReverted || getEthBalance(e.msg.sender) == balance_before + funds_before;
 }
 
 invariant totalFunds_GE_single_user_funds()

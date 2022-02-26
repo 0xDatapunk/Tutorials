@@ -35,6 +35,7 @@ contract Bank {
 	}
 	
 	function withdraw() public returns (bool success)  {
+		
 		uint256 amount = getFunds(msg.sender);
 		funds[msg.sender] = 0;
 		success = msg.sender.send(amount);
