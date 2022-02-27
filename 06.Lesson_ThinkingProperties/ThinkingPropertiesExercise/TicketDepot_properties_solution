@@ -1,6 +1,9 @@
-1. offerTicket called => offerings[offerID].deadline>=block.number 
-2. offerings[offerID].deadlineAfter < offerings[offerID].deadlineBefore => offerings[offerID].deadlineAfter==0 && buyOfferedTicket called
-3. owner.balanceAfter >= owner.balanceBefore
-4. buyNewTicket => eventsMap[_eventID].ticketsRemainingAfter>eventsMap[_eventID].ticketsRemainingBefore && eventsMap[_eventID].owner.balance >= eventsMap[_eventID].owner.balance
-5. buyOfferedTicket => ventsMap[_eventID].attendees[_ticketID].before.balance > ventsMap[_eventID].attendees[_ticketID].after.balance
-6. offerTicket and buyOfferedTicket should not change eventsMap except attendees
+1. ***Variable transition*** - offerTicket called => offerings[offerID].deadline>=block.number 
+2. ***Variable transition*** - offerings[offerID].deadlineAfter < offerings[offerID].deadlineBefore => offerings[offerID].deadlineAfter==0 && buyOfferedTicket called
+3.  ***Variable transition*** - owner.balanceAfter >= owner.balanceBefore for all function calls
+4.  ***Variable transition*** - buyNewTicket => eventsMap[_eventID].ticketsRemainingAfter>eventsMap[_eventID].ticketsRemainingBefore && eventsMap[_eventID].owner.balanceAfter >= eventsMap[_eventID].owner.balanceBefore
+5.  ***Variable transition*** - buyOfferedTicket => _newAttendee.balanceBefore < _newAttendee.balanceAfter && _oldAttendee.balanceBefore >= _oldAttendee.balanceAfter 
+6.  ***Variable transition*** - offerTicket and buyOfferedTicket should not change eventsMap except attendees
+
+
+All share similar high priorities

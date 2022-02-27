@@ -3,10 +3,14 @@
 - `defCreated` - (Created/Started) is defined as `auctions[id].end_time` is not 0.
 ```
 @note mine:
-0. ***Variable transition*** owner address cannot be changed by any functions
-1. ***Variable transition*** once `defCreated`,  `auctions[id].end_time` cannot be changed by any functions other than `close()`, which sets it to 0
+0. ***Variable transition*** owner address cannot be changed by any functions except close(). Otherwise, attackers can create potentially fake auctions
+
+1. ***Variable transition*** - `defCreated` => `auctions[id].end_time` cannot be changed except close(). Otherwise, an attacker can close off the auction early or postpone it indefinitely.
+
+2. ***Variable transition*** - `defCreated` => `auctions[id].payment` cannot be changed by any functions except close. Otherwise, an attacker can close obtain the prize at lower payment.
 
 
+@note from properties List
 1. ***Valid state*** - `defNonCreated` => `getAuction(id)` returns all 0s. If auction values are not 0 then one can get benefits from auction multiple times, which isn't not acceptable.
 
 2. ***Valid state*** - `defCreated` => `auctions[id].winner != 0`. If winner is 0 then nobody will get the auction prize.

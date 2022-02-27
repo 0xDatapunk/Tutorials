@@ -1,7 +1,44 @@
-1. state transition needs to be:
-    UNINITIALIZED to PENDING by an organizer => start>=now, end>start
-    PENDING to STARTED by anyone => start<=now 
-    PENDING to CANCELLED by organizer => end>now
-    STARTED to ENDED by anyone => end<=now
+```ruby
+- `defUninitiated` - (Uninitiated) is defined as `meetings[id].status` is 0.
+- `defPending` - (Pending) is defined as `meetings[id].status` is 1.
+- `defStarted` - (Started) is defined as `meetings[id].status` is 2.
+- `defEnded` - (Ended) is defined as `meetings[id].status` is 3.
+- `defCancelled` - (Cancelled) is defined as `meetings[id].status` is not 4.
+```
 
-2. joinMeeting called => STARTED, numOfParticipents increases
+1. ***Valid state*** - `defUninitiated` => `get*ById(id)` returns 0s. 
+
+2. ***Valid state*** - `defPending` => getStateById(meetingId) == 1
+		&& getStartTimeById(meetingId) > 0 
+		&& getEndTimeById(meetingId) > getStartTimeById(meetingId) 
+		&& getNumOfParticipents(meetingId) == 0 
+		&& getOrganizer(meetingId) != 0;
+
+3. ***Valid state*** - `defStarted` => getStateById(meetingId) == 2
+		&& getStartTimeById(meetingId) > 0 
+		&& getEndTimeById(meetingId) > getStartTimeById(meetingId)  
+		&& getOrganizer(meetingId) != 0;
+
+4. ***Valid state*** - `defEnded` => getStateById(meetingId) == 3
+		&& getStartTimeById(meetingId) > 0 
+		&& getEndTimeById(meetingId) > getStartTimeById(meetingId)  
+		&& getOrganizer(meetingId) != 0;
+
+5. ***Valid state*** - `defCancelled` => getStateById(meetingId) == 4 
+		&& getStartTimeById(meetingId) > 0 
+		&& getEndTimeById(meetingId) > getStartTimeById(meetingId) 
+		&& getOrganizer(meetingId) != 0;
+
+6. ***Variable transition*** - `defUninitiated` => next state is defUninitiated or defPending. 
+
+7. ***Variable transition*** - `defPending` => next state is defPending or defStarted or defCancelled. 
+
+8. ***Variable transition*** - `defStarted` => next state is defStarted or defEnded. 
+
+9. ***Variable transition*** - numOfParticipents changes => numOfParticipentsNew == numOfParticipentsOld+1, in defStarted, joinMeeting is called
+
+10. ***High-level*** - No way to cancel a meeting if in defStarted or defEnded
+
+11. ***High-level*** - No way to cancel a meeting if not initiated by the meeting organizer
+
+All above share the same high priority
