@@ -51,7 +51,20 @@ rule whoChangedMyGhost(method f) {
 	assert(before == after);
 }
 
+// rule check_whoChangedMyGhost(method f) {
+// 	mathint before = sumAllFunds();
+// 	env e;
+// 	calldataarg args;
+// 	f(e,args);
+// 	mathint after = sumAllFunds();
+// 	assert(before == after);
+//     assert false;
+// }
 
 // The total funds in the bank is equal to the sum of all individual funds
 invariant sumFunds() 
 	sumAllFunds() == getTotalFunds()
+
+// rule check_sumFunds() {
+//     assert sumAllFunds() == getTotalFunds();
+// }

@@ -11,7 +11,7 @@ using SymbolicFlashLoanReceiver as flashLoanReceiver
     sharesToAmount(uint256 amount) returns (uint256) envfree    
     calcPremium(uint256 amount) returns (uint256) envfree    
 
-    // for checing call backs to the pool's function
+	// for checing call backs to the pool's function @note 3 what is DISPATCHER?
     deposit(uint256) returns(uint256)  => DISPATCHER(true)
     withdraw(uint256) returns (uint256)  => DISPATCHER(true)
     flashLoan(address, uint256)  => DISPATCHER(true)
@@ -30,6 +30,7 @@ using SymbolicFlashLoanReceiver as flashLoanReceiver
     /*
         The total supply of the system is less than or equal to the underlying asset holdings of the system
     */
+	// 3. ***High-level*** - `totalSupply()` of the system is less than or equal to the `asset.balanceOf(address(this))` - each LP token represent at least 1 underlying token (number of shares <= number of underlying tokens).
     invariant totalSupply_LE_balance()
 	    totalSupply() <= underlying.balanceOf(currentContract)
         {
@@ -41,6 +42,12 @@ using SymbolicFlashLoanReceiver as flashLoanReceiver
     /*
         The total supply of the system is zero if and only if the balance of the system is zero
     */
+	// 4. ***Valid state*** - The totalSupply of the system is zero if and only if the underlying balance of the system is zero:
+    // 1. if there are LP tokens, then there are underlying tokens in the contract.
+    // 2. if there are no LP tokens, then there are no underlying tokens in the contract.
+    // ```cvl
+    // totalSupply() == 0 <=> asset.balanceOf(address(this)) == 0
+    // ```
 	invariant totalSupply_vs_balance()
 		totalSupply() == 0 <=> underlying.balanceOf(currentContract) == 0
 		{
@@ -49,6 +56,7 @@ using SymbolicFlashLoanReceiver as flashLoanReceiver
 			}
 		}
 	
+	// 5. ***High-level*** - If deposited more than 0 underlying tokens, then minted more than 0 and LP tokens vice versa - depositing non-zero amount of underlying in the pool must mint LP tokens.
 	rule deposit_GR_zero() {
 		// failing due to bugs in the code
 		env e;
@@ -60,10 +68,12 @@ using SymbolicFlashLoanReceiver as flashLoanReceiver
 		assert amount > 0 <=> amountMinted > 0;
 	}
 	
+
 	rule more_user_shares_less_underlying(method f) // failures need to check
 	filtered {
 		f -> f.selector != flashLoan(address, uint256).selector  && 
-            f.selector != transfer(address, uint256).selector && f.selector != transferFrom(address, address, uint256).selector && !f.isView
+            f.selector != transfer(address, uint256).selector && 
+			f.selector != transferFrom(address, address, uint256).selector && !f.isView
 	}
 	{
 		env e;
@@ -83,6 +93,7 @@ using SymbolicFlashLoanReceiver as flashLoanReceiver
 		assert User_balance_after < User_balance_before <=> Underlying_balance_after > Underlying_balance_before;
 	}
 	
+	// 7. ***High-level*** - The more shares you have, the more you can withdraw (can be equal because of division) - A simple but strong property
 	rule more_shares_more_withdraw() {
 		// failing
 		env e;
@@ -113,9 +124,19 @@ using SymbolicFlashLoanReceiver as flashLoanReceiver
 		uint256 balance_post = underlying.balanceOf(currentContract);
 		
 		assert flashLoanReceiver.callBackOption(e) == 0 => balance_post > balance_pre;
-		assert balance_post * totalSupply_pre >= balance_pre * totalSupply_post;
+		assert balance_post * totalSupply_pre >= balance_pre * totalSupply_post; 
+		//@note 3 why?
 	}
 	
+	// 6. ***High-level*** - Solvency of the system - the system has enough money to pay everyone.
+
+    // 1. The totalSupply of the pool is greater or equal to the sum of balances of all users - <span style="color:red"> That refers to LP tokens. We want to make sure that the system always have enough LP tokens to back what it owes to the users.</span>
+
+    // 2. ```cvl
+    //     asset.balanceOf(address(this)) >= sum of sharesToAmount(balanceOf(user))
+    //     ```
+    // <span style="color:red"> That refers to the underlying underlying tokens. We want to make sure that the system always have the funds to pay to the user what it owes him/her. The amount of underlying underlying in the system is at least equal to the worth of the LP tokens in terms of underlying token. </span>
+
 	rule user_solvency_on_flashLoan(address user) {
 		env e;
 		

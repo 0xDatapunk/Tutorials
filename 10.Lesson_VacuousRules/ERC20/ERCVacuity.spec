@@ -15,10 +15,17 @@ methods{
 invariant twoBalancesGreaterThanSingle(address account1, address account2)
     balanceOf(account1) + balanceOf(account2) < balanceOf(account1) => false
 
+rule check_twoBalancesGreaterThanSingle(address account1, address account2) {
+    assert balanceOf(account1) + balanceOf(account2) < balanceOf(account1) => false;
+}
+
 // common mistake - not before and after
 invariant twoBalancesGreaterThanSingleProb(address account1, address account2)
     balanceOf(account1) + balanceOf(account2) <= balanceOf(account1) + balanceOf(account2)
 
+rule check_twoBalancesGreaterThanSingleProb(address account1, address account2) {
+    assert balanceOf(account1) + balanceOf(account2) <= balanceOf(account1) + balanceOf(account2);
+}
 
 // totalSupply & user's balance ratios
 invariant balanceRatios(address account1, address account2)
@@ -26,6 +33,11 @@ invariant balanceRatios(address account1, address account2)
         (( balanceOf(account1) + balanceOf(account2) == 0 ) =>
             totalSupply() + balanceOf(account1) >= balanceOf(account2) )
 
+rule check_balanceRatios(address account1, address account2) {
+    assert totalSupply() == balanceOf(account1) + balanceOf(account2) =>
+        (( balanceOf(account1) + balanceOf(account2) == 0 ) =>
+            totalSupply() + balanceOf(account1) >= balanceOf(account2) );
+}
 /* 
  * Try to think about how we can check if this rule is a tautology.
  * It is not as simple as copying the assert to a rule.
@@ -40,6 +52,7 @@ rule increaseAllowanceIntegrity(address spender, uint256 amount){
     increaseAllowance(e, spender, amount);
     uint256 allowance_ = allowance(owner, spender);
     assert _allowance <= allowance_;
+    assert false;
 }
 
 // Checks if the correctness of power balance between 2 users is kept.
@@ -57,6 +70,7 @@ rule transferOutDoesNotChangePowerBalance(address user1, address user2, address 
     uint256 balance2_ = balanceOf(user2);
 
     assert balance1_ < balance2_;
+    assert false;
 }
 
 /* Hint: 
@@ -69,6 +83,7 @@ rule lastRevertedExample(address sender, address recipiecnt, uint256 amount){
     uint256 allownce_ = allowance(sender, recipiecnt);
 
     assert lastReverted => _allownce < amount;
+    assert false;
 }
 
 
@@ -79,6 +94,7 @@ rule ownerChange(address currentOwner, address user){
     f(e, args);
     address ownerAfter = _owner(e);
     assert ownerAfter != currentOwner || ownerAfter != user;
+    assert false;
 }
 
 // checks that each function changes balance of at most one user
@@ -94,6 +110,7 @@ rule balanceOfChange(method f, address user1, address user2) {
     assert ((balanceOf1After != balanceOf1Before) && 
             (balanceOf2After != balanceOf1Before)) 
                => user1 != user2; 
+    assert false;
 }
 
 // checks that mint and burn are inverse operations
@@ -104,5 +121,6 @@ rule mintBurnInverse(address user, uint256 amount) {
     burn(e, user, amount);
     uint256 balanceAfter = balanceOf(user);
     assert balanceBefore == balanceAfter;
+    assert false;
 }
 

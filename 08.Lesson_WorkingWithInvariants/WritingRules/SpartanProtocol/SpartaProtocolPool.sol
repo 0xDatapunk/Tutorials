@@ -143,5 +143,5 @@ contract SpartaProtocolPool is ERC20 {
         IERC20(token0).transfer(user, pay_in_0);
         IERC20(token1).transfer(user, pay_in_1);
     }    
-    
+
 }

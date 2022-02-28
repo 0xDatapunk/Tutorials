@@ -2,8 +2,8 @@
 1. ***Variable transition*** - rewards decrease => collectFees called
 2. ***Variable transition*** - totalFeesEarnedPerShare never decreases, otherwise DOS 
 3. ***Variable transition*** - accounts[msg.sender].Rewards decreases => accounts[msg.sender].Rewards==0 && collectFees called
-4. ***High-level*** - Solvency - this.totalSupply() >= balances[user] * (1+totalFeesEarnedPerShare)
-5. ***High-level*** - Solvency - this.totalSupply() >= sum(balances[user]) * (1+totalFeesEarnedPerShare)
+4. ***High-level*** - Solvency - this.totalSupply() >= sum(balances[user]) * (1+totalFeesEarnedPerShare)
+5. ***High-level*** - Solvency - this.totalSupply() >= balances[user] * (1+totalFeesEarnedPerShare)
 
 Q: why collectFees transfers out eth, while assetsOf accounts Rewards as erc20?
 
