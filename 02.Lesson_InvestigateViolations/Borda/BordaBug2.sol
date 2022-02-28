@@ -60,7 +60,7 @@ contract Borda is IBorda {
     }
 
     function registerVoter(uint8 age) external override returns (bool) {
-        require (!_voters[msg.sender].registered, "you are already registered");
+        require (!_voters[msg.sender].registered, "you are already registered"); // @note _contenders should be _voters
         _voters[msg.sender] = Voters({age: age, registered: true, voted: false, vote_attempts: 0, black_listed: false});
         return true;
     }
@@ -96,7 +96,7 @@ contract Borda is IBorda {
     }
 
     function voteTo(address contender, uint256 points) private {
-        uint256 contender_points = _contenders[contender].points.safeAdd(points); // @note avoid overflow
+        uint256 contender_points = _contenders[contender].points.safeAdd(points); //@avoid overflow
         _contenders[contender].points = contender_points;
         if (contender_points > pointsOfWinner) {
             winner = contender;
