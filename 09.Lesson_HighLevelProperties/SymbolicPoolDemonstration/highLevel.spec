@@ -140,7 +140,7 @@ using SymbolicFlashLoanReceiver as flashLoanReceiver
 	rule user_solvency_on_flashLoan(address user) {
 		env e;
 		
-		require user != currentContract && user != flashLoanReceiver.to(e) && user != flashLoanReceiver;
+		require user != currentContract && user != flashLoanReceiver.to(e) && user != flashLoanReceiver; // @note 3 what is flashLoanReceiver.to(e)?
 		global_requires(e);
 		
 		uint256 shares_pre = balanceOf(user);
